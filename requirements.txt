@@ -1,0 +1,16 @@
+# ==============================================================================
+# DEPENDÊNCIAS DO PROJETO - API RESTFUL DE GESTÃO DE PROJETOS E TAREFAS
+# Responsável: Dev 1 (Infraestrutura e Ambiente)
+# ==============================================================================
+
+# Framework Web principal
+Django>=5.0,<6.0
+
+# Toolkit completo para construção de APIs RESTful
+djangorestframework>=3.15.0
+
+# Biblioteca para suporte avançado a filtros dinâmicos de QuerySet no DRF
+django-filter>=24.0
+
+# Gerenciamento e carregamento de variáveis de ambiente a partir de arquivos .env
+python-dotenv>=1.0.0
