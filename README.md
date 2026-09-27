@@ -133,6 +133,9 @@ A implementação foi estruturada modularmente para que cada desenvolvedor assum
 ---
 
 ### 👨‍💻 Dev 2: Modelagem de Dados ORM, Relacionamentos e Migrações
+* **Situação:** implementado em `tasks/models.py`, `tasks/admin.py` e `tasks/migrations/0001_initial.py`.
+  * Testes da camada de modelos: `python manage.py test tasks.test_models`.
+  * As validações de datas estão em `clean()` e são executadas por `full_clean()` e pelos formulários do Django Admin. Chamadas diretas a `save()` não executam essas validações automaticamente; o Dev 3 deve validar também os payloads da API, incluindo atualizações parciais.
 * **Escopo de Atuação:**
   * Implementação das classes `Projeto` e `Tarefa` no arquivo `models.py`.
   * Configuração do relacionamento 1:N através de `models.ForeignKey(Projeto, on_delete=models.CASCADE, related_name='tarefas')`.
