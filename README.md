@@ -390,3 +390,69 @@ A API estará acessível em: `http://127.0.0.1:8000/api/`
   ]
 }
 ```
+
+---
+
+## 🔎 Filtros, busca, ordenação e paginação
+
+As rotas de listagem usam `PageNumberPagination` do DRF, configurada globalmente com **10 itens por página**. Portanto, a resposta de `GET /api/projetos/` e `GET /api/tarefas/` possui o envelope:
+
+```json
+{
+  "count": 11,
+  "next": "http://127.0.0.1:8000/api/projetos/?page=2",
+  "previous": null,
+  "results": []
+}
+```
+
+- `count`: total de registros depois da aplicação dos filtros;
+- `next` e `previous`: links da próxima e da página anterior, ou `null` quando não existirem;
+- `results`: registros da página solicitada.
+
+Use `?page=2` para acessar a segunda página.
+
+### Projetos
+
+| Objetivo | Parâmetro | Exemplo |
+| --- | --- | --- |
+| Filtrar por status | `status` | `GET /api/projetos/?status=EM_ANDAMENTO` |
+| Buscar por nome | `search` | `GET /api/projetos/?search=portal` |
+| Ordenar por início (crescente) | `ordering=data_inicio` | `GET /api/projetos/?ordering=data_inicio` |
+| Ordenar por início (decrescente) | `ordering=-data_inicio` | `GET /api/projetos/?ordering=-data_inicio` |
+
+### Tarefas
+
+| Objetivo | Parâmetro | Exemplo |
+| --- | --- | --- |
+| Filtrar por prioridade | `prioridade` | `GET /api/tarefas/?prioridade=ALTA` |
+| Filtrar por conclusão | `concluida` | `GET /api/tarefas/?concluida=true` |
+| Filtrar pelo ID do projeto | `projeto` | `GET /api/tarefas/?projeto=1` |
+| Buscar por título | `search` | `GET /api/tarefas/?search=wireframes` |
+
+Os parâmetros podem ser combinados, por exemplo: `GET /api/tarefas/?projeto=1&prioridade=ALTA&concluida=false`.
+
+### Como os parâmetros são processados pelo DRF
+
+O `ModelViewSet` inicia a listagem com seu `queryset`. Antes de serializar a resposta, o DRF chama os backends definidos em `DEFAULT_FILTER_BACKENDS`:
+
+1. `DjangoFilterBackend` lê campos permitidos em `filterset_fields` e restringe o `QuerySet` com parâmetros como `status` e `prioridade`.
+2. `SearchFilter` lê o parâmetro `search` e pesquisa apenas os campos declarados em `search_fields`.
+3. `OrderingFilter` lê `ordering`; o prefixo `-` inverte a ordem. Para projetos, somente `data_inicio` é permitido.
+4. Por último, `PageNumberPagination` divide o resultado já filtrado e ordenado em páginas de até 10 itens.
+
+---
+
+## ✅ Testes automatizados
+
+A suíte de integração está em `tasks/tests.py`. Ela valida os contratos de payload, o ciclo CRUD, a serialização aninhada, regras de negócio, filtros, busca, ordenação e o envelope da paginação.
+
+```bash
+# Executa apenas os testes dos endpoints REST
+python manage.py test tasks.tests
+
+# Executa toda a suíte do aplicativo
+python manage.py test tasks
+```
+
+Os testes usam `APITestCase`, que cria um banco de dados isolado para cada execução. As requisições são feitas com `format='json'`, os códigos HTTP são verificados e o corpo da resposta é inspecionado para garantir que o contrato da API seja respeitado.
