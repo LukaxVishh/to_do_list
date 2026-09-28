@@ -385,7 +385,7 @@ A API estará acessível em: `http://127.0.0.1:8000/api/`
 **Resposta (`400 Bad Request`):**
 ```json
 {
-  "non_field_errors": [
+  "data_previsao_fim": [
     "A data de previsão de término não pode ser anterior à data de início do projeto."
   ]
 }
