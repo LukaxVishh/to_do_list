@@ -33,9 +33,12 @@ from .serializers import ProjetoDetailSerializer, ProjetoSerializer, TarefaSeria
 
 
 class ProjetoViewSet(viewsets.ModelViewSet):
-    """Expõe as operações CRUD de projetos."""
+    """Expõe CRUD, filtro, busca e ordenação de projetos."""
 
     queryset = Projeto.objects.all()
+    filterset_fields = ['status']
+    search_fields = ['nome']
+    ordering_fields = ['data_inicio']
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
@@ -44,7 +47,9 @@ class ProjetoViewSet(viewsets.ModelViewSet):
 
 
 class TarefaViewSet(viewsets.ModelViewSet):
-    """Expõe as operações CRUD de tarefas."""
+    """Expõe CRUD, filtros e busca de tarefas."""
 
     queryset = Tarefa.objects.all()
     serializer_class = TarefaSerializer
+    filterset_fields = ['prioridade', 'concluida', 'projeto']
+    search_fields = ['titulo']
