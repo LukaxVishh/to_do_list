@@ -28,4 +28,23 @@ Orientações para o Dev 5:
 
 from rest_framework import viewsets
 
-# TODO (Dev 4 e Dev 5): Implementar ProjetoViewSet e TarefaViewSet com suporte a filtros conforme as orientações acima.
+from .models import Projeto, Tarefa
+from .serializers import ProjetoDetailSerializer, ProjetoSerializer, TarefaSerializer
+
+
+class ProjetoViewSet(viewsets.ModelViewSet):
+    """Expõe as operações CRUD de projetos."""
+
+    queryset = Projeto.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return ProjetoDetailSerializer
+        return ProjetoSerializer
+
+
+class TarefaViewSet(viewsets.ModelViewSet):
+    """Expõe as operações CRUD de tarefas."""
+
+    queryset = Tarefa.objects.all()
+    serializer_class = TarefaSerializer

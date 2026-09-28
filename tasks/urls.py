@@ -14,8 +14,12 @@ Orientações para o Dev 4:
 
 from rest_framework.routers import DefaultRouter
 
+from .views import ProjetoViewSet, TarefaViewSet
+
+
 router = DefaultRouter()
 
-# TODO (Dev 4): Registrar as rotas de 'projetos' e 'tarefas' no router após a criação das ViewSets.
+router.register(r'projetos', ProjetoViewSet, basename='projeto')
+router.register(r'tarefas', TarefaViewSet, basename='tarefa')
 
 urlpatterns = router.urls
